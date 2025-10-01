@@ -6,7 +6,7 @@
 
 The Farm Stand web application is a simple yet powerful platform built with Express.js and MongoDB using Mongoose. It provides users with the ability to manage products typically found in a farm stand or local market. You can easily create, edit, and delete products, making it an excellent tool for farm stand owners or anyone interested in managing a product catalog.
 
-![image](https://github.com/vishal-phoenix/Farm-Stand/assets/100995024/f19c866b-6a82-44c6-bb4c-cc2ddb8baab8)
+
 
 ## Usage
 
@@ -48,7 +48,7 @@ Farm Stand requires [Node.js](https://nodejs.org/) v10+ to run.
 Install the dependencies and devDependencies and start the server.
 
 ```sh
-git clone https://github.com/vishal-phoenix/farm-stand.git
+git clone https://github.com/kanishsingh510/AgriTech
 cd farm-stand
 ```
 
