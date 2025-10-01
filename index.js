@@ -54,6 +54,7 @@ app.post('/products',async (req,res)=>{
    res.redirect(`/products/${newProduct._id}`);
 })
 
+// kanish verma
 app.get('/products/:id',async (req,res)=>{
     const {id} = req.params;
     const product = await Product.findById(id);
