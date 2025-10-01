@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= product.name %></title>
+    <link rel="stylesheet" href="/css/show.css">
+</head>
+<body>
+    <div class="page">
+        <header class="page-header">
+            <a class="back-link" href="/products">← All Products</a>
+        </header>
+
+        <main class="product-card">
+            <div class="product-card__media">
+                <img
+                    src="<%= product.category === 'fruit' ? 'https://images.unsplash.com/photo-1570610155223-59b4b6b90a49?q=80&w=1600&auto=format&fit=crop' : product.category === 'vegetable' ? 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1600&auto=format&fit=crop' : product.category === 'dairy' ? 'https://images.unsplash.com/photo-1563630423918-6fbb11635bcb?q=80&w=1600&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1600&auto=format&fit=crop' %>"
+                    alt="<%= product.category %>"
+                />
+            </div>
+            <div class="product-card__header">
+                <h1 class="product-card__title"><%= product.name %></h1>
+                <div class="product-card__price">₹<%= product.price %></div>
+            </div>
+
+            <div class="product-card__meta">
+                <span class="meta-label">Category</span>
+                <a class="category-pill" href="/products?category=<%= product.category %>">
+                    <%= product.category %>
+                </a>
+            </div>
+
+            <div class="product-card__actions">
+                <a class="btn btn--primary" id="edit-link" href="/products/<%= product._id %>/edit">Edit</a>
+                <form class="inline" id="delete-button" action="/products/<%= product._id %>?_method=DELETE" method="post">
+                    <button class="btn btn--danger" type="submit">Delete</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
