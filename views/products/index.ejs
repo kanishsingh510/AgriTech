@@ -3,60 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= category[0].toUpperCase()+category.slice(1)  %> Products</title>
-    <link rel="stylesheet" href="/css/index.css">
+    <title>AgriTech Dashboard - <%= category[0].toUpperCase()+category.slice(1)  %> Products</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         /* Fallback font if CSS fails to load fast */
         body { font-family: 'Inter', Arial, sans-serif; }
     </style>
-    </head>
+</head>
 <body>
-    <div class="page">
-        <header class="page-header">
-            <h1 class="page-title"><%= category[0].toUpperCase()+category.slice(1) %> Products</h1>
-            <div class="header-actions">
-                <a class="btn btn--primary" href="/products/new">+ New Product</a>
-                <% if(category!== 'All') { %>
-                    <a class="btn" href="/products">All Products</a>
-                <% } %>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>AgriTech</span>
+                </div>
             </div>
-        </header>
+            
+            <nav class="sidebar__nav">
+                <a href="/products" class="nav-item <%= category === 'All' ? 'active' : '' %>">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/products/new" class="nav-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add Product</span>
+                </a>
+                <div class="nav-section">
+                    <span class="nav-section__title">Categories</span>
+                    <a href="/products?category=fruit" class="nav-item <%= category === 'fruit' ? 'active' : '' %>">
+                        <i class="fas fa-apple-alt"></i>
+                        <span>Fruits</span>
+                    </a>
+                    <a href="/products?category=vegetable" class="nav-item <%= category === 'vegetable' ? 'active' : '' %>">
+                        <i class="fas fa-carrot"></i>
+                        <span>Vegetables</span>
+                    </a>
+                    <a href="/products?category=dairy" class="nav-item <%= category === 'dairy' ? 'active' : '' %>">
+                        <i class="fas fa-cheese"></i>
+                        <span>Dairy</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
 
-        <nav class="filters">
-            <a class="filter <%= category==='All' ? 'is-active' : '' %>" href="/products">All</a>
-            <a class="filter <%= category==='fruit' ? 'is-active' : '' %>" href="/products?category=fruit">Fruit</a>
-            <a class="filter <%= category==='vegetable' ? 'is-active' : '' %>" href="/products?category=vegetable">Vegetable</a>
-            <a class="filter <%= category==='dairy' ? 'is-active' : '' %>" href="/products?category=dairy">Dairy</a>
-        </nav>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title"><%= category[0].toUpperCase()+category.slice(1) %> Products</h1>
+                    <p class="page-subtitle">Manage your agricultural products</p>
+                </div>
+                <div class="header-right">
+                    <a href="/products/new" class="btn btn--primary">
+                        <i class="fas fa-plus"></i>
+                        Add Product
+                    </a>
+                </div>
+            </header>
 
-        <main class="grid">
-            <% for(let product of products){ %>
-                <article class="card">
-                    <div class="card__media">
-                        <img
-                            src="<%= product.category === 'fruit' ? 'https://images.unsplash.com/photo-1570610155223-59b4b6b90a49?q=80&w=1200&auto=format&fit=crop' : product.category === 'vegetable' ? 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1200&auto=format&fit=crop' : product.category === 'dairy' ? 'https://images.unsplash.com/photo-1563630423918-6fbb11635bcb?q=80&w=1200&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1200&auto=format&fit=crop' %>"
-                            alt="<%= product.category %>"
-                            loading="lazy"
-                        />
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card__icon">
+                        <i class="fas fa-boxes"></i>
                     </div>
-                    <div class="card__body">
-                        <h2 class="card__title"><a href="/products/<%= product._id %>"><%= product.name %></a></h2>
-                        <div class="card__meta">
-                            <span class="price">₹<%= product.price %></span>
-                            <a class="category-pill" href="/products?category=<%= product.category %>"><%= product.category %></a>
-                        </div>
+                    <div class="stat-card__content">
+                        <h3><%= products.length %></h3>
+                        <p>Total Products</p>
                     </div>
-                    <div class="card__actions">
-                        <a class="btn btn--primary" href="/products/<%= product._id %>">View</a>
-                        <a class="btn" href="/products/<%= product._id %>/edit">Edit</a>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__icon">
+                        <i class="fas fa-rupee-sign"></i>
                     </div>
-                </article>
-            <% } %>
+                    <div class="stat-card__content">
+                        <h3>₹<%= products.reduce((sum, product) => sum + product.price, 0).toFixed(2) %></h3>
+                        <p>Total Value</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-card__content">
+                        <h3>₹<%= products.length > 0 ? (products.reduce((sum, product) => sum + product.price, 0) / products.length).toFixed(2) : '0.00' %></h3>
+                        <p>Avg. Price</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-card__content">
+                        <h3><%= [...new Set(products.map(p => p.category))].length %></h3>
+                        <p>Categories</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-section">
+                <div class="section-header">
+                    <h2>Your Products</h2>
+                    <div class="view-controls">
+                        <button class="view-btn active" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="products-grid" id="products-grid">
+                    <% for(let product of products){ %>
+                        <article class="product-card">
+                            <div class="product-card__image">
+                                <% if(product.image) { %>
+                                    <img src="<%= product.image %>" alt="<%= product.name %>" loading="lazy" />
+                                <% } else { %>
+                                    <img
+                                        src="<%= product.category === 'fruit' ? 'https://images.unsplash.com/photo-1570610155223-59b4b6b90a49?q=80&w=1200&auto=format&fit=crop' : product.category === 'vegetable' ? 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1200&auto=format&fit=crop' : product.category === 'dairy' ? 'https://images.unsplash.com/photo-1563630423918-6fbb11635bcb?q=80&w=1200&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1200&auto=format&fit=crop' %>"
+                                        alt="<%= product.category %>"
+                                        loading="lazy"
+                                    />
+                                <% } %>
+                                <div class="product-card__overlay">
+                                    <a href="/products/<%= product._id %>" class="btn btn--sm btn--white">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="/products/<%= product._id %>/edit" class="btn btn--sm btn--white">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="product-card__content">
+                                <div class="product-card__header">
+                                    <h3 class="product-card__title"><%= product.name %></h3>
+                                    <span class="product-card__price">₹<%= parseFloat(product.price).toFixed(2) %></span>
+                                </div>
+                                <div class="product-card__meta">
+                                    <span class="category-badge category-<%= product.category %>">
+                                        <i class="fas fa-<%= product.category === 'fruit' ? 'apple-alt' : product.category === 'vegetable' ? 'carrot' : 'cheese' %>"></i>
+                                        <%= product.category %>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+                    <% } %>
+                </div>
+            </div>
         </main>
     </div>
-</body>
 
+    <script>
+        // View toggle functionality
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const view = btn.dataset.view;
+                const grid = document.getElementById('products-grid');
+                
+                if (view === 'list') {
+                    grid.classList.add('list-view');
+                } else {
+                    grid.classList.remove('list-view');
+                }
+            });
+        });
+    </script>
+</body>
 </html>

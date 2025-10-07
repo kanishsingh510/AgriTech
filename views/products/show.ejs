@@ -3,41 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= product.name %></title>
-    <link rel="stylesheet" href="/css/show.css">
+    <title><%= product.name %> - AgriTech Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', Arial, sans-serif; }
+    </style>
 </head>
 <body>
-    <div class="page">
-        <header class="page-header">
-            <a class="back-link" href="/products">← All Products</a>
-        </header>
-
-        <main class="product-card">
-            <div class="product-card__media">
-                <img
-                    src="<%= product.category === 'fruit' ? 'https://images.unsplash.com/photo-1570610155223-59b4b6b90a49?q=80&w=1600&auto=format&fit=crop' : product.category === 'vegetable' ? 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1600&auto=format&fit=crop' : product.category === 'dairy' ? 'https://images.unsplash.com/photo-1563630423918-6fbb11635bcb?q=80&w=1600&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1600&auto=format&fit=crop' %>"
-                    alt="<%= product.category %>"
-                />
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>AgriTech</span>
+                </div>
             </div>
-            <div class="product-card__header">
-                <h1 class="product-card__title"><%= product.name %></h1>
-                <div class="product-card__price">₹<%= product.price %></div>
-            </div>
-
-            <div class="product-card__meta">
-                <span class="meta-label">Category</span>
-                <a class="category-pill" href="/products?category=<%= product.category %>">
-                    <%= product.category %>
+            
+            <nav class="sidebar__nav">
+                <a href="/products" class="nav-item">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
                 </a>
-            </div>
+                <a href="/products/new" class="nav-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add Product</span>
+                </a>
+                <div class="nav-section">
+                    <span class="nav-section__title">Categories</span>
+                    <a href="/products?category=fruit" class="nav-item">
+                        <i class="fas fa-apple-alt"></i>
+                        <span>Fruits</span>
+                    </a>
+                    <a href="/products?category=vegetable" class="nav-item">
+                        <i class="fas fa-carrot"></i>
+                        <span>Vegetables</span>
+                    </a>
+                    <a href="/products?category=dairy" class="nav-item">
+                        <i class="fas fa-cheese"></i>
+                        <span>Dairy</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
 
-            <div class="product-card__actions">
-                <a class="btn btn--primary" id="edit-link" href="/products/<%= product._id %>/edit">Edit</a>
-                <form class="inline" id="delete-button" action="/products/<%= product._id %>?_method=DELETE" method="post">
-                    <button class="btn btn--danger" type="submit">Delete</button>
-                </form>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <a href="/products" class="back-link">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Products
+                    </a>
+                    <h1 class="page-title"><%= product.name %></h1>
+                    <p class="page-subtitle">Product Details & Management</p>
+                </div>
+                <div class="header-right">
+                    <a href="/products/<%= product._id %>/edit" class="btn btn--primary">
+                        <i class="fas fa-edit"></i>
+                        Edit Product
+                    </a>
+                </div>
+            </header>
+
+            <!-- Product Detail Card -->
+            <div class="product-detail">
+                <div class="product-detail__image">
+                    <% if(product.image) { %>
+                        <img src="<%= product.image %>" alt="<%= product.name %>" />
+                    <% } else { %>
+                        <img
+                            src="<%= product.category === 'fruit' ? 'https://images.unsplash.com/photo-1570610155223-59b4b6b90a49?q=80&w=1600&auto=format&fit=crop' : product.category === 'vegetable' ? 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1600&auto=format&fit=crop' : product.category === 'dairy' ? 'https://images.unsplash.com/photo-1563630423918-6fbb11635bcb?q=80&w=1600&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1600&auto=format&fit=crop' %>"
+                            alt="<%= product.category %>"
+                        />
+                    <% } %>
+                </div>
+                
+                <div class="product-detail__content">
+                    <div class="product-detail__header">
+                        <h2 class="product-detail__title"><%= product.name %></h2>
+                        <div class="product-detail__price">₹<%= parseFloat(product.price).toFixed(2) %></div>
+                    </div>
+
+                    <div class="product-detail__meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Category</span>
+                            <span class="category-badge category-<%= product.category %>">
+                                <i class="fas fa-<%= product.category === 'fruit' ? 'apple-alt' : product.category === 'vegetable' ? 'carrot' : 'cheese' %>"></i>
+                                <%= product.category %>
+                            </span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Product ID</span>
+                            <span class="meta-value"><%= product._id %></span>
+                        </div>
+                    </div>
+
+                    <div class="product-detail__actions">
+                        <a href="/products/<%= product._id %>/edit" class="btn btn--primary">
+                            <i class="fas fa-edit"></i>
+                            Edit Product
+                        </a>
+                        <form class="inline" action="/products/<%= product._id %>?_method=DELETE" method="post" onsubmit="return confirm('Are you sure you want to delete this product?')">
+                            <button class="btn btn--danger" type="submit">
+                                <i class="fas fa-trash"></i>
+                                Delete Product
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
+
+    <style>
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+
+        .product-detail {
+            background: var(--white);
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 500px;
+        }
+
+        .product-detail__image {
+            position: relative;
+            background: var(--gray-100);
+        }
+
+        .product-detail__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-detail__content {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-detail__header {
+            margin-bottom: 2rem;
+        }
+
+        .product-detail__title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+        }
+
+        .product-detail__price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .product-detail__meta {
+            margin-bottom: 2rem;
+        }
+
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .meta-item:last-child {
+            border-bottom: none;
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .meta-value {
+            color: var(--gray-600);
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+
+        .product-detail__actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn--danger {
+            background: var(--danger-color);
+            color: var(--white);
+        }
+
+        .btn--danger:hover {
+            background: #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-detail__content {
+                padding: 2rem;
+            }
+            
+            .product-detail__title {
+                font-size: 2rem;
+            }
+            
+            .product-detail__price {
+                font-size: 2.5rem;
+            }
+            
+            .product-detail__actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </body>
 </html>

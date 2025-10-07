@@ -43,12 +43,48 @@ label {
 /* Style form input fields */
 input[type="text"],
 input[type="number"],
+input[type="file"],
 select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 15px;
+}
+
+/* Style file input specifically */
+input[type="file"] {
+    background-color: #f8f9fa;
+    cursor: pointer;
+    border: 2px dashed #007BFF;
+    text-align: center;
+}
+
+input[type="file"]:hover {
+    background-color: #e9ecef;
+    border-color: #0056b3;
+}
+
+/* Style current image display */
+.current-image {
+    margin: 10px 0;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.current-image p {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.current-image img {
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Style form button */
