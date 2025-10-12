@@ -153,8 +153,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 kg",
                 description: "Premium Alphonso mangoes, sweet and juicy, perfect for summer",
                 isOrganic: false,
-                farmerName: "Rajesh Kumar",
-                location: "Ratnagiri, Maharashtra"
+                
             },
             {
                 name: "Organic Cow Milk",
@@ -163,8 +162,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 litre",
                 description: "Fresh organic cow milk, pure and nutritious",
                 isOrganic: true,
-                farmerName: "Suresh Patel",
-                location: "Anand, Gujarat"
+               
             },
             {
                 name: "Desi Ghee (Pure)",
@@ -173,8 +171,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 kg",
                 description: "Traditional homemade desi ghee, rich in taste and aroma",
                 isOrganic: true,
-                farmerName: "Priya Sharma",
-                location: "Haryana"
+                
             },
             {
                 name: "Fresh Tomatoes",
@@ -183,8 +180,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 kg",
                 description: "Fresh red tomatoes, perfect for cooking and salads",
                 isOrganic: false,
-                farmerName: "Amit Singh",
-                location: "Punjab"
+                
             },
             {
                 name: "Basmati Rice (Premium)",
@@ -193,8 +189,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 kg",
                 description: "Premium quality basmati rice, long grain and aromatic",
                 isOrganic: false,
-                farmerName: "Vikram Mehta",
-                location: "Haryana"
+              
             },
             {
                 name: "Turmeric Powder (Haldi)",
@@ -203,8 +198,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 kg",
                 description: "Pure turmeric powder, bright yellow and aromatic",
                 isOrganic: true,
-                farmerName: "Sunita Devi",
-                location: "Kerala"
+                
             },
             {
                 name: "Organic Bananas",
@@ -213,8 +207,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 dozen",
                 description: "Fresh organic bananas, naturally ripened",
                 isOrganic: true,
-                farmerName: "Kumar Swamy",
-                location: "Karnataka"
+               
             },
             {
                 name: "Fresh Onions",
@@ -223,8 +216,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 kg",
                 description: "Fresh red onions, perfect for daily cooking",
                 isOrganic: false,
-                farmerName: "Ramesh Yadav",
-                location: "Maharashtra"
+                
             },
             {
                 name: "Organic Wheat Flour",
@@ -233,8 +225,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 kg",
                 description: "Stone-ground organic wheat flour, perfect for rotis",
                 isOrganic: true,
-                farmerName: "Devendra Kumar",
-                location: "Rajasthan"
+                
             },
             {
                 name: "Red Chili Powder",
@@ -243,8 +234,7 @@ app.get('/seed', async (req, res) => {
                 quantity: "1 kg",
                 description: "Pure red chili powder, medium spicy and aromatic",
                 isOrganic: false,
-                farmerName: "Lakshmi Reddy",
-                location: "Andhra Pradesh"
+                
             }
         ];
         
