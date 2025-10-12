@@ -16,11 +16,33 @@ const productSchema = new mongoose.Schema({
     category: {
         type : String,
         lowercase: true,
-        enum: ["fruit","vegetable","dairy"]
+        enum: ["fruits","vegetables","dairy","grains","spices","organic"]
+    },
+    quantity: {
+        type: String,
+        required: true,
+        default: "1 kg"
+    },
+    description: {
+        type: String,
+        required: true,
+        maxlength: 200
     },
     image: {
         type: String,
         default: null
+    },
+    isOrganic: {
+        type: Boolean,
+        default: false
+    },
+    farmerName: {
+        type: String,
+        default: "Local Farmer"
+    },
+    location: {
+        type: String,
+        default: "India"
     }
 })
 

@@ -66,7 +66,7 @@ const upload = multer({
 });
 
 
-const categories = ['fruit','vagetable','dairy'];
+const categories = ['fruits','vegetables','dairy','grains','spices','organic'];
 
 app.get('/products',async (req,res)=>{
     const {category} = req.query;
@@ -139,7 +139,125 @@ app.delete('/products/:id',async(req,res)=>{
 })
 
 
+// Seed sample products
+app.get('/seed', async (req, res) => {
+    try {
+        // Clear existing products
+        await Product.deleteMany({});
+        
+        const sampleProducts = [
+            {
+                name: "Fresh Alphonso Mangoes",
+                price: 120.00,
+                category: "fruits",
+                quantity: "1 kg",
+                description: "Premium Alphonso mangoes, sweet and juicy, perfect for summer",
+                isOrganic: false,
+                farmerName: "Rajesh Kumar",
+                location: "Ratnagiri, Maharashtra"
+            },
+            {
+                name: "Organic Cow Milk",
+                price: 70.00,
+                category: "dairy",
+                quantity: "1 litre",
+                description: "Fresh organic cow milk, pure and nutritious",
+                isOrganic: true,
+                farmerName: "Suresh Patel",
+                location: "Anand, Gujarat"
+            },
+            {
+                name: "Desi Ghee (Pure)",
+                price: 600.00,
+                category: "dairy",
+                quantity: "1 kg",
+                description: "Traditional homemade desi ghee, rich in taste and aroma",
+                isOrganic: true,
+                farmerName: "Priya Sharma",
+                location: "Haryana"
+            },
+            {
+                name: "Fresh Tomatoes",
+                price: 40.00,
+                category: "vegetables",
+                quantity: "1 kg",
+                description: "Fresh red tomatoes, perfect for cooking and salads",
+                isOrganic: false,
+                farmerName: "Amit Singh",
+                location: "Punjab"
+            },
+            {
+                name: "Basmati Rice (Premium)",
+                price: 90.00,
+                category: "grains",
+                quantity: "1 kg",
+                description: "Premium quality basmati rice, long grain and aromatic",
+                isOrganic: false,
+                farmerName: "Vikram Mehta",
+                location: "Haryana"
+            },
+            {
+                name: "Turmeric Powder (Haldi)",
+                price: 220.00,
+                category: "spices",
+                quantity: "1 kg",
+                description: "Pure turmeric powder, bright yellow and aromatic",
+                isOrganic: true,
+                farmerName: "Sunita Devi",
+                location: "Kerala"
+            },
+            {
+                name: "Organic Bananas",
+                price: 60.00,
+                category: "fruits",
+                quantity: "1 dozen",
+                description: "Fresh organic bananas, naturally ripened",
+                isOrganic: true,
+                farmerName: "Kumar Swamy",
+                location: "Karnataka"
+            },
+            {
+                name: "Fresh Onions",
+                price: 35.00,
+                category: "vegetables",
+                quantity: "1 kg",
+                description: "Fresh red onions, perfect for daily cooking",
+                isOrganic: false,
+                farmerName: "Ramesh Yadav",
+                location: "Maharashtra"
+            },
+            {
+                name: "Organic Wheat Flour",
+                price: 45.00,
+                category: "grains",
+                quantity: "1 kg",
+                description: "Stone-ground organic wheat flour, perfect for rotis",
+                isOrganic: true,
+                farmerName: "Devendra Kumar",
+                location: "Rajasthan"
+            },
+            {
+                name: "Red Chili Powder",
+                price: 180.00,
+                category: "spices",
+                quantity: "1 kg",
+                description: "Pure red chili powder, medium spicy and aromatic",
+                isOrganic: false,
+                farmerName: "Lakshmi Reddy",
+                location: "Andhra Pradesh"
+            }
+        ];
+        
+        await Product.insertMany(sampleProducts);
+        res.send('Sample products added successfully!');
+    } catch (error) {
+        console.error('Error seeding products:', error);
+        res.status(500).send('Error seeding products');
+    }
+});
+
 app.listen(4000,()=>{
     console.log("Yeah port is listening")
     console.log("http://localhost:4000/products")
+    console.log("Seed products: http://localhost:4000/seed")
 })

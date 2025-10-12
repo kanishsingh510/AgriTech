@@ -3,181 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriTech Dashboard - <%= category[0].toUpperCase()+category.slice(1)  %> Products</title>
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <title>AgriTech Marketplace - <%= category[0].toUpperCase()+category.slice(1)  %> Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'agri-green': '#10b981',
+                        'agri-dark': '#059669',
+                        'agri-light': '#34d399',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* Fallback font if CSS fails to load fast */
-        body { font-family: 'Inter', Arial, sans-serif; }
+        body { font-family: 'Inter', sans-serif; }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .category-fruits { @apply bg-orange-100 text-orange-800; }
+        .category-vegetables { @apply bg-green-100 text-green-800; }
+        .category-dairy { @apply bg-blue-100 text-blue-800; }
+        .category-grains { @apply bg-yellow-100 text-yellow-800; }
+        .category-spices { @apply bg-red-100 text-red-800; }
+        .category-organic { @apply bg-emerald-100 text-emerald-800; }
     </style>
 </head>
-<body>
-    <div class="dashboard">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar__header">
-                <div class="logo">
-                    <i class="fas fa-seedling"></i>
-                    <span>AgriTech</span>
+<body class="bg-gray-50 font-inter">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-seedling text-3xl text-agri-green"></i>
+                        <h1 class="text-2xl font-bold text-gray-900">AgriTech</h1>
+                    </div>
+                    <span class="text-sm text-gray-500">Farm to Market</span>
                 </div>
-            </div>
-            
-            <nav class="sidebar__nav">
-                <a href="/products" class="nav-item <%= category === 'All' ? 'active' : '' %>">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/products/new" class="nav-item">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Add Product</span>
-                </a>
-                <div class="nav-section">
-                    <span class="nav-section__title">Categories</span>
-                    <a href="/products?category=fruit" class="nav-item <%= category === 'fruit' ? 'active' : '' %>">
-                        <i class="fas fa-apple-alt"></i>
-                        <span>Fruits</span>
-                    </a>
-                    <a href="/products?category=vegetable" class="nav-item <%= category === 'vegetable' ? 'active' : '' %>">
-                        <i class="fas fa-carrot"></i>
-                        <span>Vegetables</span>
-                    </a>
-                    <a href="/products?category=dairy" class="nav-item <%= category === 'dairy' ? 'active' : '' %>">
-                        <i class="fas fa-cheese"></i>
-                        <span>Dairy</span>
-                    </a>
-                </div>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Top Header -->
-            <header class="top-header">
-                <div class="header-left">
-                    <h1 class="page-title"><%= category[0].toUpperCase()+category.slice(1) %> Products</h1>
-                    <p class="page-subtitle">Manage your agricultural products</p>
-                </div>
-                <div class="header-right">
-                    <a href="/products/new" class="btn btn--primary">
+                <div class="flex items-center space-x-4">
+                    <a href="/products/new" class="bg-agri-green text-white px-6 py-2 rounded-lg hover:bg-agri-dark transition-colors flex items-center space-x-2">
                         <i class="fas fa-plus"></i>
-                        Add Product
+                        <span>Add Product</span>
                     </a>
                 </div>
-            </header>
+            </div>
+        </div>
+    </header>
 
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-card__icon">
-                        <i class="fas fa-boxes"></i>
-                    </div>
-                    <div class="stat-card__content">
-                        <h3><%= products.length %></h3>
-                        <p>Total Products</p>
-                    </div>
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-agri-green to-agri-dark text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-4">
+                <%= category[0].toUpperCase()+category.slice(1) %> Products
+            </h2>
+            <p class="text-xl opacity-90">Fresh, organic, and locally sourced agricultural products</p>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="bg-white shadow-sm py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap gap-2">
+                    <a href="/products" class="px-4 py-2 rounded-full text-sm font-medium transition-colors <%= category === 'All' ? 'bg-agri-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                        All Products
+                    </a>
+                    <a href="/products?category=fruits" class="px-4 py-2 rounded-full text-sm font-medium transition-colors <%= category === 'fruits' ? 'bg-agri-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                        <i class="fas fa-apple-alt mr-2"></i>Fruits
+                    </a>
+                    <a href="/products?category=vegetables" class="px-4 py-2 rounded-full text-sm font-medium transition-colors <%= category === 'vegetables' ? 'bg-agri-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                        <i class="fas fa-carrot mr-2"></i>Vegetables
+                    </a>
+                    <a href="/products?category=dairy" class="px-4 py-2 rounded-full text-sm font-medium transition-colors <%= category === 'dairy' ? 'bg-agri-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                        <i class="fas fa-cheese mr-2"></i>Dairy
+                    </a>
+                    <a href="/products?category=grains" class="px-4 py-2 rounded-full text-sm font-medium transition-colors <%= category === 'grains' ? 'bg-agri-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                        <i class="fas fa-seedling mr-2"></i>Grains
+                    </a>
+                    <a href="/products?category=spices" class="px-4 py-2 rounded-full text-sm font-medium transition-colors <%= category === 'spices' ? 'bg-agri-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                        <i class="fas fa-pepper-hot mr-2"></i>Spices
+                    </a>
+                    <a href="/products?category=organic" class="px-4 py-2 rounded-full text-sm font-medium transition-colors <%= category === 'organic' ? 'bg-agri-green text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                        <i class="fas fa-leaf mr-2"></i>Organic
+                    </a>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card__icon">
-                        <i class="fas fa-rupee-sign"></i>
-                    </div>
-                    <div class="stat-card__content">
-                        <h3>₹<%= products.reduce((sum, product) => sum + product.price, 0).toFixed(2) %></h3>
-                        <p>Total Value</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card__icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="stat-card__content">
-                        <h3>₹<%= products.length > 0 ? (products.reduce((sum, product) => sum + product.price, 0) / products.length).toFixed(2) : '0.00' %></h3>
-                        <p>Avg. Price</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card__icon">
-                        <i class="fas fa-tags"></i>
-                    </div>
-                    <div class="stat-card__content">
-                        <h3><%= [...new Set(products.map(p => p.category))].length %></h3>
-                        <p>Categories</p>
-                    </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600"><%= products.length %> products found</span>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Products Grid -->
-            <div class="products-section">
-                <div class="section-header">
-                    <h2>Your Products</h2>
-                    <div class="view-controls">
-                        <button class="view-btn active" data-view="grid">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button class="view-btn" data-view="list">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="products-grid" id="products-grid">
-                    <% for(let product of products){ %>
-                        <article class="product-card">
-                            <div class="product-card__image">
-                                <% if(product.image) { %>
-                                    <img src="<%= product.image %>" alt="<%= product.name %>" loading="lazy" />
-                                <% } else { %>
-                                    <img
-                                        src="<%= product.category === 'fruit' ? 'https://images.unsplash.com/photo-1570610155223-59b4b6b90a49?q=80&w=1200&auto=format&fit=crop' : product.category === 'vegetable' ? 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1200&auto=format&fit=crop' : product.category === 'dairy' ? 'https://images.unsplash.com/photo-1563630423918-6fbb11635bcb?q=80&w=1200&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1200&auto=format&fit=crop' %>"
-                                        alt="<%= product.category %>"
-                                        loading="lazy"
-                                    />
-                                <% } %>
-                                <div class="product-card__overlay">
-                                    <a href="/products/<%= product._id %>" class="btn btn--sm btn--white">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="/products/<%= product._id %>/edit" class="btn btn--sm btn--white">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="product-card__content">
-                                <div class="product-card__header">
-                                    <h3 class="product-card__title"><%= product.name %></h3>
-                                    <span class="product-card__price">₹<%= parseFloat(product.price).toFixed(2) %></span>
-                                </div>
-                                <div class="product-card__meta">
-                                    <span class="category-badge category-<%= product.category %>">
-                                        <i class="fas fa-<%= product.category === 'fruit' ? 'apple-alt' : product.category === 'vegetable' ? 'carrot' : 'cheese' %>"></i>
-                                        <%= product.category %>
-                                    </span>
-                                </div>
-                            </div>
-                        </article>
-                    <% } %>
-                </div>
+    <!-- Products Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <% if(products.length === 0) { %>
+            <div class="text-center py-16">
+                <i class="fas fa-seedling text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
+                <p class="text-gray-500 mb-6">Start by adding your first agricultural product</p>
+                <a href="/products/new" class="bg-agri-green text-white px-6 py-3 rounded-lg hover:bg-agri-dark transition-colors">
+                    Add Product
+                </a>
             </div>
-        </main>
-    </div>
+        <% } else { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <% for(let product of products){ %>
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden product-card transition-all duration-300 hover:shadow-2xl">
+                        <!-- Product Image -->
+                        <div class="relative h-48 bg-gray-100">
+                            <% if(product.image) { %>
+                                <img src="<%= product.image %>" alt="<%= product.name %>" class="w-full h-full object-cover" loading="lazy" />
+                            <% } else { %>
+                                <img
+                                    src="<%= product.category === 'fruits' ? 'https://images.unsplash.com/photo-1570610155223-59b4b6b90a49?q=80&w=400&auto=format&fit=crop' : product.category === 'vegetables' ? 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=400&auto=format&fit=crop' : product.category === 'dairy' ? 'https://images.unsplash.com/photo-1563630423918-6fbb11635bcb?q=80&w=400&auto=format&fit=crop' : product.category === 'grains' ? 'https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=400&auto=format&fit=crop' : product.category === 'spices' ? 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=400&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=400&auto=format&fit=crop' %>"
+                                    alt="<%= product.category %>"
+                                    class="w-full h-full object-cover"
+                                    loading="lazy"
+                                />
+                            <% } %>
+                            <!-- Organic Badge -->
+                            <% if(product.isOrganic) { %>
+                                <div class="absolute top-3 left-3 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                                    <i class="fas fa-leaf mr-1"></i>Organic
+                                </div>
+                            <% } %>
+                            <!-- Action Buttons -->
+                            <div class="absolute top-3 right-3 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="/products/<%= product._id %>" class="bg-white text-gray-700 p-2 rounded-full shadow-lg hover:bg-gray-50">
+                                    <i class="fas fa-eye text-sm"></i>
+                                </a>
+                                <a href="/products/<%= product._id %>/edit" class="bg-white text-gray-700 p-2 rounded-full shadow-lg hover:bg-gray-50">
+                                    <i class="fas fa-edit text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="p-4">
+                            <!-- Category Badge -->
+                            <div class="mb-2">
+                                <span class="category-<%= product.category %> px-3 py-1 rounded-full text-xs font-semibold">
+                                    <%= product.category.charAt(0).toUpperCase() + product.category.slice(1) %>
+                                </span>
+                            </div>
+
+                            <!-- Product Name -->
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                                <%= product.name %>
+                            </h3>
+
+                            <!-- Description -->
+                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                                <%= product.description %>
+                            </p>
+
+                            <!-- Price and Quantity -->
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="text-2xl font-bold text-agri-green">
+                                    ₹<%= parseFloat(product.price).toFixed(2) %>
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    <%= product.quantity %>
+                                </div>
+                            </div>
+
+                            <!-- Farmer Info -->
+                            <div class="text-xs text-gray-500 mb-3">
+                                <i class="fas fa-user mr-1"></i>
+                                <%= product.farmerName %> • <%= product.location %>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex space-x-2">
+                                <a href="/products/<%= product._id %>" class="flex-1 bg-agri-green text-white text-center py-2 rounded-lg hover:bg-agri-dark transition-colors text-sm font-medium">
+                                    View Details
+                                </a>
+                                <a href="/products/<%= product._id %>/edit" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <i class="fas fa-seedling text-2xl text-agri-green"></i>
+                <span class="text-xl font-bold">AgriTech</span>
+            </div>
+            <p class="text-gray-400">Connecting farmers with consumers for fresh, organic produce</p>
+        </div>
+    </footer>
 
     <script>
-        // View toggle functionality
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                const view = btn.dataset.view;
-                const grid = document.getElementById('products-grid');
-                
-                if (view === 'list') {
-                    grid.classList.add('list-view');
-                } else {
-                    grid.classList.remove('list-view');
-                }
+        // Add hover effects to product cards
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.querySelector('.opacity-0').classList.remove('opacity-0');
+                this.querySelector('.opacity-0').classList.add('opacity-100');
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.querySelector('.opacity-100').classList.remove('opacity-100');
+                this.querySelector('.opacity-100').classList.add('opacity-0');
             });
         });
     </script>
