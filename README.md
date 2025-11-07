@@ -1,72 +1,145 @@
+## AgriTech: Farmer & Buyer Product Management System
 
+Full‑stack agritech platform built with Node.js, Express.js, MongoDB, EJS, Tailwind CSS, and Razorpay (test mode).
 
+### Features
+- Authentication with roles: Farmer, Buyer (bcrypt + express-session)
+- Role redirects: Farmer → `/farmer/dashboard`, Buyer → `/buyer/marketplace`
+- Farmer dashboard: add/edit/delete products with image upload (Multer)
+- Buyer marketplace: view products, filter by category, search by name
+- Razorpay test payments: order creation + verification; transactions saved to DB
+- Multi-language (English/Hindi) toggle on Farmer dashboard via `/public/js/language.js`
+- Responsive UI with Tailwind CSS (CDN)
 
-# The Farm Stand
-## _The Last Farm Standing, Ever_
+### Tech Stack
+- Node.js, Express.js, EJS
+- MongoDB, Mongoose
+- express-session, connect-mongo
+- Multer (image uploads to `public/uploads`)
+- Razorpay (test keys)
 
-The Farm Stand web application is a simple yet powerful platform built with Express.js and MongoDB using Mongoose. It provides users with the ability to manage products typically found in a farm stand or local market. You can easily create, edit, and delete products, making it an excellent tool for farm stand owners or anyone interested in managing a product catalog.
+---
 
+## Getting Started
 
+### 1) Install dependencies
+```bash
+npm install
+```
+
+### 2) Configure environment
+Create a `.env` file in the project root with:
+```
+PORT=5000
+SESSION_SECRET=agri-tech-secret
+RAZORPAY_KEY_ID=rzp_test_12345
+RAZORPAY_SECRET=abc123
+# Optional: if local MongoDB isn’t running, server will try Atlas via ATLAS_URI
+ATLAS_URI=
+```
+
+Notes:
+- The app connects to local MongoDB at `mongodb://127.0.0.1:27017/agritech` by default (see `config/db.js`). If local is unavailable, it will try `ATLAS_URI`.
+- On Windows PowerShell, you can set env vars for the session instead:
+```powershell
+$env:PORT="5000"
+$env:SESSION_SECRET="agri-tech-secret"
+$env:RAZORPAY_KEY_ID="rzp_test_12345"
+$env:RAZORPAY_SECRET="abc123"
+$env:ATLAS_URI=""
+```
+
+### 3) Start MongoDB
+- Local MongoDB recommended: install and run mongod.
+
+### 4) Seed demo users and products
+Start the server (next step) and visit: `http://localhost:5000/seed`
+
+Seeds created:
+- Farmer: `farmer@gmail.com` / `123456`
+- Buyer: `buyer@gmail.com` / `123456`
+- Products: Mango, Onion, Rice, Milk, Ghee, Wheat, Tomato
+
+### 5) Run the server
+```bash
+npm start
+```
+
+Open `http://localhost:5000`
+
+---
 
 ## Usage
 
-- Navigate to the home page to view all products or filter them by category.
-- Click on a product to view detailed information.
-- Use the "New Product" button to add a new product to the catalog.
-- Edit and delete products as needed.
+### Authentication
+- Single login page with role selector (Farmer/Buyer)
+- Redirects by role after login
 
-## Features
+### Farmer Dashboard (`/farmer/dashboard`)
+- Create products with fields: Name, Category, Price (₹), Quantity, Description, Image
+- Categories: Fruits, Vegetables, Dairy, Grains, Spices, Organic
+- Language toggle (English 🇬🇧 / हिंदी 🇮🇳) stored in localStorage
 
-The Farm Stand application offers the following features:
+### Buyer Marketplace (`/buyer/marketplace`)
+- View all products; filter by category; search by name
+- Shows farmer name and location
+- Buy Now → Razorpay popup → on success, transaction saved
 
-- Product Management: List and filter products by category.
-- Add New Products: Easily add new products with names, prices, and categories.
-- Edit Existing Products: Modify product details as needed.
-- Delete Products: Remove products from the database when they are no longer available.
+### Buyer Dashboard (`/buyer/dashboard`)
+- View payment confirmations and past transactions
 
-## Build With
+---
 
-The Farm Stand application is built using the following technologies:
-
-- [Node.js](https://nodejs.org/en) - An evented I/O for the backend
-- [Express.js](https://expressjs.com/) - A Node.js web application framework.
-- [MongoDB](https://www.mongodb.com/) - A NoSQL database for storing product information.
-- [Mongoose](https://mongoosejs.com/) - An ODM (Object Data Modeling) library for MongoDB.
-- [EJS](https://ejs.co/) - A templating engine for rendering views.
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed on your machine:
-
-- [Node.js](https://nodejs.org/)
-- [MongoDB](https://www.mongodb.com/try/download/community)
-  
-## Installation
-
-Farm Stand requires [Node.js](https://nodejs.org/) v10+ to run.
-
-Install the dependencies and devDependencies and start the server.
-
-```sh
-git clone https://github.com/kanishsingh510/AgriTech
-cd farm-stand
+## Project Structure
+```
+AgriTech/
+├── server.js
+├── config/db.js
+├── routes/
+│   ├── auth.js
+│   ├── farmer.js
+│   ├── buyer.js
+│   └── payment.js
+├── controllers/
+│   ├── authController.js
+│   ├── farmerController.js
+│   ├── buyerController.js
+│   └── paymentController.js
+├── models/
+│   ├── User.js
+│   ├── product.js
+│   └── Transaction.js
+├── views/
+│   ├── home.ejs
+│   ├── login.ejs
+│   ├── signup.ejs
+│   ├── farmer/dashboard.ejs
+│   ├── buyer/marketplace.ejs
+│   └── buyer/dashboard.ejs
+├── public/
+│   ├── css/style.css
+│   ├── js/language.js
+│   └── uploads/ (created at runtime)
+└── .env (not committed)
 ```
 
-For production environments...
+---
 
-```sh
-npm install
-npm start
-```
-## Database Seeding
-To populate the MongoDB database with initial data, you can use the provided seeds.js script:
-```sh
-node seeds.js
-```
+## Key Endpoints
+- `GET /` → Home
+- `GET /login`, `POST /login`, `POST /logout`
+- `GET /signup`, `POST /signup`
+- `GET /seed` → seed demo users/products
+- `GET /farmer/dashboard`, `POST /farmer/products`, `PUT /farmer/products/:id`, `DELETE /farmer/products/:id`
+- `GET /buyer/marketplace`, `GET /buyer/dashboard`
+- `POST /payment/create-order`, `POST /payment/verify`
 
-## License
+---
 
-MIT
+## Notes
+- Image uploads are stored under `public/uploads` and served statically.
+- Razorpay runs in test mode using the provided test keys.
+- Tailwind CSS is included via CDN with primary color `#3CB043`.
 
-**Free Software, Hell Yeah!**
+License: MIT
 

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farmer Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script> tailwind.config = { theme: { extend: { colors: { primary: '#3CB043', accent:'#2D6A4F' } } } } </script>
+  <link rel="stylesheet" href="/css/style.css">
+  <script defer src="/js/language.js"></script>
+  <style> body{font-family:Inter,ui-sans-serif,system-ui;} </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+  <header class="bg-white/90 backdrop-blur shadow-sm sticky top-0 z-20">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold">Ag</span>
+        <span class="font-semibold text-lg">AgriTech</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <select id="languageSelect" class="border rounded px-2 py-1">
+          <option value="en">English 🇬🇧</option>
+          <option value="hi">हिंदी 🇮🇳</option>
+        </select>
+        <form action="/logout" method="POST">
+          <button class="px-3 py-2 rounded bg-primary text-white">Logout</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <% if (success) { %>
+    <div class="fixed top-4 right-4 z-30">
+      <div class="toast">✅ Product added successfully</div>
+    </div>
+    <script> setTimeout(()=>{ const t=document.querySelector('.toast'); if(t) t.remove(); }, 2200); </script>
+  <% } %>
+
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-lg font-semibold mb-4" data-i18n="addProduct">Add Product</h2>
+      <form action="/farmer/products" method="POST" enctype="multipart/form-data" class="grid md:grid-cols-3 gap-4" aria-label="Add Product Form">
+        <input name="name" placeholder="Name" class="input" required aria-label="Name" />
+        <select name="category" class="input" required aria-label="Category">
+          <option value="fruits">Fruits</option>
+          <option value="vegetables">Vegetables</option>
+          <option value="dairy">Dairy</option>
+          <option value="grains">Grains</option>
+          <option value="spices">Spices</option>
+          <option value="organic">Organic</option>
+        </select>
+        <input name="price" type="number" step="0.01" placeholder="Price (₹)" class="input" data-i18n-placeholder="price" required aria-label="Price" />
+        <div class="flex gap-2">
+          <input name="quantity" type="number" min="1" placeholder="Quantity" class="input flex-1" data-i18n-placeholder="quantity" required aria-label="Quantity" />
+          <select name="unit" class="input w-28" aria-label="Unit">
+            <option value="kg">kg</option>
+            <option value="litre">litre</option>
+            <option value="dozen">dozen</option>
+            <option value="piece">piece</option>
+          </select>
+        </div>
+        <input name="description" placeholder="Description" class="input md:col-span-2" required aria-label="Description" />
+        <div class="space-y-2">
+          <input id="imageInput" type="file" name="image" accept="image/*" class="input" aria-label="Image Upload" />
+          <img id="preview" alt="Preview" class="hidden w-full h-32 object-cover rounded-md" />
+        </div>
+        <label class="flex items-center gap-2"><input type="checkbox" name="isOrganic" aria-label="Organic" /> Organic</label>
+        <button class="btn-primary">Save</button>
+      </form>
+      <script>
+        const input = document.getElementById('imageInput');
+        const preview = document.getElementById('preview');
+        if (input) input.addEventListener('change', (e)=>{ const f=e.target.files?.[0]; if(!f) return; const url=URL.createObjectURL(f); preview.src=url; preview.classList.remove('hidden'); });
+      </script>
+    </section>
+
+    <section>
+      <h2 class="text-lg font-semibold mb-4">Your Products</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% products.forEach(p => { const img=p.image||p.imagePath; %>
+        <article class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+          <div class="relative aspect-[4/3] bg-gray-100">
+            <img src="<%= img || 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1200&auto=format&fit=crop' %>" alt="<%= p.name %>" class="w-full h-full object-cover" />
+            <span class="badge capitalize"><%= p.category %></span>
+          </div>
+          <div class="p-4 space-y-2">
+            <h3 class="font-semibold text-lg"><%= p.name %></h3>
+            <div class="text-primary font-semibold">₹ <%= Number(p.price).toFixed(2) %> <span class="text-xs text-gray-500">/ <%= p.unit || 'kg' %></span></div>
+            <form action="/farmer/products/<%= p._id %>" method="POST" enctype="multipart/form-data" class="space-y-2 mt-2" aria-label="Edit Product Form">
+              <input type="hidden" name="_method" value="PUT" />
+              <input name="name" value="<%= p.name %>" class="input w-full" />
+              <input name="price" type="number" step="0.01" value="<%= p.price %>" class="input w-full" />
+              <div class="flex gap-2">
+                <input name="quantity" type="number" min="1" value="<%= p.quantity %>" class="input flex-1" />
+                <select name="unit" class="input w-28">
+                  <option <%= (p.unit||'kg')==='kg'?'selected':'' %> value="kg">kg</option>
+                  <option <%= p.unit==='litre'?'selected':'' %> value="litre">litre</option>
+                  <option <%= p.unit==='dozen'?'selected':'' %> value="dozen">dozen</option>
+                  <option <%= p.unit==='piece'?'selected':'' %> value="piece">piece</option>
+                </select>
+              </div>
+              <input name="description" value="<%= p.description %>" class="input w-full" />
+              <input type="file" name="image" accept="image/*" class="input w-full" />
+              <button class="w-full btn-primary">Update</button>
+            </form>
+            <form action="/farmer/products/<%= p._id %>" method="POST" class="mt-2" aria-label="Delete Product Form">
+              <input type="hidden" name="_method" value="DELETE" />
+              <button class="w-full btn-danger">Delete</button>
+            </form>
+          </div>
+        </article>
+        <% }) %>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+
+

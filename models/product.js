@@ -1,50 +1,60 @@
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
-    name:{
-        type : String,
-        required: true
+const productSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true
     },
-    price : {
-        type : Number,
-        required: true,
-        min: 0,
-        set: function(value) {
-            return parseFloat(value).toFixed(2);
-        }
+    price: {
+      type: Number,
+      required: true,
+      min: 0
     },
     category: {
-        type : String,
-        lowercase: true,
-        enum: ["fruits","vegetables","dairy","grains","spices","organic"]
+      type: String,
+      lowercase: true,
+      enum: ["fruits", "vegetables", "dairy", "grains", "spices", "organic"]
     },
     quantity: {
-        type: String,
-        required: true,
-        default: "1 kg"
+      type: Number,
+      required: true,
+      default: 1
+    },
+    unit: {
+      type: String,
+      enum: ["kg", "litre", "dozen", "piece"],
+      default: "kg"
     },
     description: {
-        type: String,
-        required: true,
-        maxlength: 200
+      type: String,
+      required: true,
+      maxlength: 200
     },
     image: {
-        type: String,
-        default: null
+      type: String,
+      default: null
+    },
+    imagePath: {
+      type: String,
+      default: null
     },
     isOrganic: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false
     },
-    farmerName: {
-        type: String,
-        default: "Local Farmer"
+    farmerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false
     },
-    location: {
-        type: String,
-        default: "India"
+    createdAt: {
+      type: Date,
+      default: Date.now
     }
-})
+  },
+  { timestamps: true }
+);
 
-const Product = mongoose.model('Product',productSchema);
-module.exports=Product;
+const Product = mongoose.model('Product', productSchema);
+module.exports = Product;

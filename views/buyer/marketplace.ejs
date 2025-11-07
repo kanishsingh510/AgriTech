@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriTech Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { primary: '#3CB043', accent: '#2D6A4F' }, fontFamily: { inter: ['Inter','ui-sans-serif'], poppins: ['Poppins','ui-sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script defer src="/js/product-filter.js"></script>
+  <style> body{font-family:Inter,ui-sans-serif,system-ui;} </style>
+  </head>
+<body class="min-h-screen bg-gray-50 text-gray-800">
+  <header class="bg-white/90 backdrop-blur shadow-sm sticky top-0 z-20">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary font-bold">Ag</span>
+        <span class="font-semibold text-lg">AgriTech</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="/" class="hover:text-primary">Home</a>
+        <a href="/buyer/marketplace" class="text-primary font-medium">Marketplace</a>
+        <a href="/buyer/dashboard" class="hover:text-primary">My Purchases</a>
+        <a href="/farmer/dashboard" class="hover:text-primary">Dashboard</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <select id="languageSelect" class="border rounded px-2 py-1 text-sm">
+          <option value="en">EN</option>
+          <option value="hi">HI</option>
+        </select>
+        <form action="/logout" method="POST">
+          <button class="px-3 py-2 rounded-lg bg-primary text-white text-sm hover:opacity-90">Logout</button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-6">
+    <section class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-semibold">Marketplace</h1>
+        <p class="text-gray-500 text-sm">Fresh produce directly from farmers</p>
+      </div>
+      <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+        <div class="flex bg-white items-center gap-2 rounded-lg border px-3 py-2 w-full md:w-80">
+          <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.9 14.32a8 8 0 111.414-1.414l3.387 3.386a1 1 0 01-1.414 1.415l-3.387-3.387zM14 8a6 6 0 11-12 0 6 6 0 0112 0z" clip-rule="evenodd"/></svg>
+          <input id="searchInput" value="<%= q %>" class="flex-1 outline-none" placeholder="Search products..." />
+        </div>
+        <select id="sortSelect" class="bg-white rounded-lg border px-3 py-2">
+          <option value="newest" <%= sort==='newest'? 'selected':'' %>>Newest</option>
+          <option value="price_asc" <%= sort==='price_asc'? 'selected':'' %>>Price: Low to High</option>
+          <option value="price_desc" <%= sort==='price_desc'? 'selected':'' %>>Price: High to Low</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="flex flex-wrap gap-2" id="categoryPills">
+      <% const cats=['All','fruits','vegetables','dairy','grains','spices','organic']; %>
+      <% cats.forEach(c => { const active = (category||'All').toLowerCase()===c.toLowerCase(); %>
+        <button data-cat="<%= c %>" class="px-3 py-1.5 rounded-full text-sm border <%= active? 'bg-primary text-white border-primary':'bg-white hover:bg-gray-50' %>"><%= c.charAt(0).toUpperCase()+c.slice(1) %></button>
+      <% }) %>
+    </section>
+
+    <section id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% products.forEach(p => { const img=p.image||p.imagePath; %>
+      <article class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+        <div class="relative aspect-[4/3] bg-gray-100">
+          <img src="<%= img || 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1200&auto=format&fit=crop' %>" loading="lazy" alt="<%= p.name %>" class="w-full h-full object-cover" />
+          <span class="absolute top-3 left-3 inline-flex text-xs px-2 py-1 rounded-full bg-primary/90 text-white capitalize"><%= p.category %></span>
+        </div>
+        <div class="p-4 space-y-2">
+          <h3 class="font-semibold text-lg"><%= p.name %></h3>
+          <p class="text-sm text-gray-500 line-clamp-2"><%= p.description %></p>
+          <div class="flex items-center justify-between">
+            <div class="text-primary font-semibold">₹ <%= Number(p.price).toFixed(2) %> <span class="text-xs text-gray-500">/ <%= p.unit || 'kg' %></span></div>
+            <div class="text-xs text-gray-500">By <%= p.farmerId?.name || 'Farmer' %> (<%= p.farmerId?.location || 'NA' %>)</div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2">
+            <a href="/buyer/marketplace#" class="btn-secondary">View Details</a>
+            <button data-product-id="<%= p._id %>" class="btn-primary buyBtn">Buy Now</button>
+          </div>
+        </div>
+      </article>
+      <% }) %>
+    </section>
+  </main>
+
+  <footer class="mt-12 border-t bg-white">
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
+      <div>
+        <div class="font-semibold mb-2">About</div>
+        <p class="text-gray-500">AgriTech connects farmers and buyers to enable fair, fresh, and local trade.</p>
+      </div>
+      <div>
+        <div class="font-semibold mb-2">Contact</div>
+        <p class="text-gray-500">Email: support@agritech.demo</p>
+      </div>
+      <div>
+        <div class="font-semibold mb-2">College Project</div>
+        <p class="text-gray-500">Demo application built for academic submission.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.buyBtn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const productId = btn.getAttribute('data-product-id');
+        const res = await fetch('/payment/create-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId }) });
+        const data = await res.json();
+        const options = {
+          key: data.key,
+          amount: data.amount,
+          currency: data.currency,
+          name: 'AgriTech',
+          description: 'Order Payment',
+          order_id: data.orderId,
+          handler: async function (response) {
+            await fetch('/payment/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(response) });
+            window.location.href = '/buyer/dashboard';
+          }
+        };
+        new Razorpay(options).open();
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
